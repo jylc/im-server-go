@@ -20,4 +20,4 @@
 *.iml
 *.ipr
 
-./config/conf.json
+/config/conf.json
