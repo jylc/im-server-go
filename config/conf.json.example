@@ -1,0 +1,14 @@
+{
+  "mysql": {
+    "user": "root",
+    "passwd": "pwd",
+    "net": "tcp",
+    "addr": "172.168.0.1,
+    "dbname": "cim",
+    "collation": "utf8mb4_unicode_ci",
+    "allow_native_passwords": true,
+    "conn_max_life_time": "1m",
+    "max_idle_conns": 10,
+    "max_open_conns": 10
+  }
+}
