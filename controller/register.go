@@ -18,17 +18,14 @@ import (
 // @Param who query string true "人名"
 // @Success 200 {string} string "{"msg": "hello Razeen"}"
 // @Failure 400 {string} string "{"msg": "who are you"}"
-// @Router /hello [get]
-
+// @Router /register [post]
 func Register(c *gin.Context) {
 	type reqBody struct {
 		Telephone string `json:"telephone"`
 		Pwd       string `json:"pwd"`
 	}
 	var reqbody reqBody
-	/*
-		绑定数据
-	*/
+
 	err := c.ShouldBind(&reqbody)
 	if err != nil {
 		_ = c.AbortWithError(500, err)

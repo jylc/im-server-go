@@ -3,11 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
-	"im-server-go/controller"
 	_ "im-server-go/docs"
-	"im-server-go/interceptor"
+	"im-server-go/routes"
 )
 
 var logo = "(♥◠‿◠)ﾉﾞ  CIM version0.1 启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
@@ -34,14 +31,9 @@ var logo = "(♥◠‿◠)ﾉﾞ  CIM version0.1 启动成功   ლ(´ڡ`ლ)ﾞ
 // @BasePath /api/v1
 func main() {
 	r := gin.Default()
-	r.Use(interceptor.CORS())
 
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	routes.InitRoutes(r)
 
-	v1 := r.Group("/api/v1")
-	{
-		v1.POST("/register", controller.Register)
-	}
 	if err := r.Run(":8080"); err != nil {
 		fmt.Println("[CIM] start failed!!!")
 		return
