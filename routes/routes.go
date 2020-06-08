@@ -6,6 +6,7 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"im-server-go/controller"
 	_ "im-server-go/docs"
+	"im-server-go/domain"
 	"im-server-go/interceptor"
 )
 
@@ -18,6 +19,6 @@ func InitRoutes(r *gin.Engine) {
 
 	v1 := r.Group("/api/v1")
 	{
-		v1.POST("/register", controller.Register)
+		v1.POST("/register", domain.NewCtrl(controller.Register))
 	}
 }

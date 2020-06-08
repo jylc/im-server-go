@@ -2,7 +2,6 @@ package controller
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	_ "im-server-go/docs"
 	"im-server-go/domain"
 	"im-server-go/service"
@@ -19,10 +18,10 @@ import (
 // @Success 200 {string} string "{"msg": "hello Razeen"}"
 // @Failure 400 {string} string "{"msg": "who are you"}"
 // @Router /register [post]
-func Register(c *gin.Context) {
+func Register(c *domain.Context) {
 	type reqBody struct {
 		Telephone string `json:"telephone"`
-		Pwd       string `json:"pwd"`
+		Password  string `json:"password"`
 	}
 	var reqbody reqBody
 
@@ -34,9 +33,7 @@ func Register(c *gin.Context) {
 	if len(reqbody.Telephone) != 11 || len(reqbody.Pwd) < 6 {
 		fmt.Println("[Register]Telephone number or password error")
 		response := &domain.ApiResponse{}
-		c.Data(http.StatusInternalServerError,
-			"application/json",
-			response.Error("Telephone number or password error", nil).JsonBytes())
+
 		return
 	}
 
