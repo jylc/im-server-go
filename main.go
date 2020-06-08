@@ -2,7 +2,12 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"github.com/gin-gonic/gin"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
+	"im-server-go/controller"
+	_ "im-server-go/docs"
+	"im-server-go/interceptor"
 )
 
 var logo = "(♥◠‿◠)ﾉﾞ  CIM version0.1 启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
@@ -16,55 +21,31 @@ var logo = "(♥◠‿◠)ﾉﾞ  CIM version0.1 启动成功   ლ(´ڡ`ლ)ﾞ
 // @title Swagger Example API
 // @version 1.0
 // @description This is a sample server celler server.
-// @termsOfService http://swagger.io/terms/
+// @termsOfService https://razeen.me
 
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
+// @contact.name Razeen
+// @contact.url https://razeen.me
+// @contact.email me@razeen.me
 
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:8080
+// @host 127.0.0.1:8080
 // @BasePath /api/v1
-// @query.collection.format multi
-
-// @securityDefinitions.basic BasicAuth
-
-// @securityDefinitions.apikey ApiKeyAuth
-// @in header
-// @name Authorization
-
-// @securitydefinitions.oauth2.application OAuth2Application
-// @tokenUrl https://example.com/oauth/token
-// @scope.write Grants write access
-// @scope.admin Grants read and write access to administrative information
-
-// @securitydefinitions.oauth2.implicit OAuth2Implicit
-// @authorizationurl https://example.com/oauth/authorize
-// @scope.write Grants write access
-// @scope.admin Grants read and write access to administrative information
-
-// @securitydefinitions.oauth2.password OAuth2Password
-// @tokenUrl https://example.com/oauth/token
-// @scope.read Grants read access
-// @scope.write Grants write access
-// @scope.admin Grants read and write access to administrative information
-
-// @securitydefinitions.oauth2.accessCode OAuth2AccessCode
-// @tokenUrl https://example.com/oauth/token
-// @authorizationurl https://example.com/oauth/authorize
-// @scope.admin Grants read and write access to administrative information
-
-// @x-extension-openapi {"example": "value on a json format"}
 func main() {
-	file, err := ioutil.ReadFile("config/conf.json")
-	if err != nil {
-		fmt.Println("Read file err ", err)
+	r := gin.Default()
+	r.Use(interceptor.CORS())
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	v1 := r.Group("/api/v1")
+	{
+		v1.POST("/register", controller.Register)
+	}
+	if err := r.Run(":8080"); err != nil {
+		fmt.Println("[CIM] start failed!!!")
 		return
 	}
-	fmt.Println("file ", string(file))
-
-	/*fmt.Println("[CIM start!!!]")
-	fmt.Println(logo)*/
+	fmt.Println("[CIM] start successful!!!")
+	fmt.Println(logo)
 }

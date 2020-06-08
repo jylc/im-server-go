@@ -2,7 +2,9 @@ package domain
 
 import (
 	"bytes"
+	"encoding/json"
 	"im-server-go/enums"
+	"log"
 )
 
 const (
@@ -55,4 +57,22 @@ func (ar *ApiResponse) ToString() string {
 		s.WriteString("key:" + key + " value:" + value.(string))
 	}
 	return s.String()
+}
+
+//编码为json的字节数组类型
+func (ar *ApiResponse) JsonBytes() []byte {
+	data, err := json.Marshal(ar.resp)
+	if err != nil {
+		log.Println("[ApiResponse] map to json error :", err)
+	}
+	return data
+}
+
+//编码为json的string类型
+func (ar *ApiResponse) JsonString() string {
+	data, err := json.Marshal(ar.resp)
+	if err != nil {
+		log.Println("[ApiResponse] map to json error :", err)
+	}
+	return string(data)
 }

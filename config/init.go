@@ -9,7 +9,7 @@ var Cfg *viper.Viper
 
 func init() {
 	Cfg = viper.New()
-	Cfg.SetConfigName("conf.json")
+	Cfg.SetConfigName("conf")
 	Cfg.SetConfigType("json")
 	Cfg.AddConfigPath("./config/")
 	err := Cfg.ReadInConfig()

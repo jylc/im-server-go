@@ -1,5 +1,11 @@
 package connections
 
+var conn IUser
+
 func init() {
-	initMySql()
+	conn = InitMySql()
+}
+
+func GetSqlConn() IUser {
+	return conn
 }
