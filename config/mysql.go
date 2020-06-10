@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/go-sql-driver/mysql"
+	"im-server-go/utils"
 	"time"
 )
 
@@ -12,21 +13,21 @@ type mysqlConfig struct {
 	Config          *mysql.Config
 }
 
-var MysqlCfg = &mysqlConfig{}
+var MySQLConfig = &mysqlConfig{}
 
 func initMySql() {
 	cfg := Cfg.GetStringMap("mysql")
 
-	MysqlCfg.Config = &mysql.Config{
-		User:                 cfg["user"].(string),
-		Passwd:               cfg["passwd"].(string),
-		Net:                  cfg["net"].(string),
-		Addr:                 cfg["addr"].(string),
-		DBName:               cfg["dbname"].(string),
-		Collation:            cfg["collation"].(string),
-		AllowNativePasswords: cfg["allow_native_passwords"].(bool),
+	MySQLConfig.Config = &mysql.Config{
+		User:                 utils.AsString(cfg["auth"]),
+		Passwd:               utils.AsString(cfg["passwd"]),
+		Net:                  utils.AsString(cfg["net"]),
+		Addr:                 utils.AsString(cfg["addr"]),
+		DBName:               utils.AsString(cfg["dbname"]),
+		Collation:            utils.AsString(cfg["collation"]),
+		AllowNativePasswords: (cfg["allow_native_passwords"]).(bool),
 	}
-	MysqlCfg.ConnMaxLifeTime, _ = time.ParseDuration(cfg["conn_max_life_time"].(string))
-	MysqlCfg.MaxIdleConns = int(cfg["max_idle_conns"].(float64))
-	MysqlCfg.MaxOpenConns = int(cfg["max_open_conns"].(float64))
+	MySQLConfig.ConnMaxLifeTime, _ = time.ParseDuration(utils.AsString(cfg["conn_max_life_time"]))
+	MySQLConfig.MaxIdleConns = utils.AsInt(cfg["max_idle_conns"])
+	MySQLConfig.MaxOpenConns = utils.AsInt(cfg["max_open_conns"])
 }

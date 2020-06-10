@@ -1,13 +1,10 @@
 package controller
 
 import (
-	"fmt"
 	_ "im-server-go/docs"
 	"im-server-go/domain"
-	"im-server-go/entity/mysql_model"
-	"im-server-go/service"
-	"log"
-	"regexp"
+	"im-server-go/service/register"
+	"im-server-go/service/telephone"
 )
 
 // @Summary  注册
@@ -22,38 +19,27 @@ import (
 // @Router /register [post]
 func Register(c *domain.Context) {
 	type reqBody struct {
-		Telephone string `form:"telephone"`
-		Password  string `form:"password"`
+		Telephone string `form:"telephone" json:"telephone"`
+		Password  string `form:"password" json:"password"`
 	}
 	var reqbody reqBody
 
 	err := c.ShouldBind(&reqbody)
 	if err != nil {
-		_ = c.AbortWithError(500, err)
-		return
-	}
-	if len(reqbody.Telephone) != 11 || len(reqbody.Password) < 6 {
-		log.Println("[Register]Telephone or password error")
-		c.Fail("Telephone or password error")
+		c.Fail(err.Error())
 		return
 	}
 
-	//校验手机号
-	regular := "^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\\d{8}$"
-	compile := regexp.MustCompile(regular)
-	if result := compile.MatchString(reqbody.Telephone); result == false {
-		fmt.Println("[Register]Telephone number format is error")
-		c.Fail("Telephone number format is error")
+	if valid := telephone.IsValid(reqbody.Telephone); !valid {
+		c.Fail("请输入正确的手机号")
 		return
 	}
-	var user mysql_model.User
-	user, err = service.Register(reqbody.Telephone, reqbody.Password)
+
+	user, err := register.Register(reqbody.Telephone, reqbody.Password)
 	if err != nil {
-		c.Fail("This telephone has been registered")
+		c.Fail(err.Error())
 		return
 	}
-	//设置AccessToken
 
-	c.Header("AccessToken", user.AccessToken)
 	c.Success(user)
 }
