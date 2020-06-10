@@ -3,13 +3,16 @@ package connections
 import (
 	"fmt"
 	_ "im-server-go/config"
+	"im-server-go/utils"
 
 	"testing"
 )
 
 func TestMysqlConn(t *testing.T) {
 	conn := GetSqlConn()
-	if success := conn.UserSignIn("13141514481", "123212"); success == true {
+	tel := "13141514481"
+	token := utils.GenToken(tel)
+	if success := conn.UserSignIn("13141514481", "123212", token); success == true {
 		user, err := conn.GetUserInfo("13141514481")
 		if err != nil {
 			fmt.Println("Get user information failed!!!")
@@ -26,9 +29,11 @@ func TestMysqlConn(t *testing.T) {
 func TestSignUp(t *testing.T) {
 	conn := GetSqlConn()
 	//手机号假设正确
-	if succ := conn.UserSignUp("13141507497", "miao~"); succ == true {
+	tel := "13141514481"
+	token := utils.GenToken(tel)
+	if err := conn.UserSignUp("13141507495", "miao~", token); err == nil {
 		fmt.Println("register success!!!")
 	} else {
-		fmt.Println("register failed!!!")
+		fmt.Println("register failed!!! err ", err)
 	}
 }
